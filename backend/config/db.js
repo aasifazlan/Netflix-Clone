@@ -6,7 +6,7 @@ import { ENV_VARS } from "./envVars.js";
 
 export const connectDB= async ()=>{
     try {
-       const conn= await mongoose.connect("mongodb+srv://aasiffilms79:ENNlJQwZc5bF0bpd@cluster0.n8va2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+       const conn= await mongoose.connect(process.env.MONGO_URI)
         console.log('MongoDB connected:'+ conn.connection.host);
     } catch (error) {
         console.error('Error connecting to MongoDB', error);

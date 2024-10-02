@@ -5,9 +5,11 @@ import { connectDB } from './config/db.js';
 
 const app = express();
 const PORT=ENV_VARS.PORT
+
+app.use(express.json()) // this allow us to parse req.body
 app.use("/api/v1/auth", authRoutes)
 
-app.use(express.json());
+
 
 
 
