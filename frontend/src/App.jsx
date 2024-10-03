@@ -1,14 +1,23 @@
+import { Route, Routes } from "react-router-dom" 
+import { BrowserRouter } from "react-router-dom"
+import HomePage from "./pages/home/HomePage"
+import LoginPage from "./pages/LoginPage"
+import SignUpPage from "./pages/SignUpPage"
+import Footer from "./components/Footer"
  
  
-import './index.css'
-
 function App() {
   
 
   return (
-     <div>
-      netflix
-     </div>
+    <BrowserRouter>
+     <Routes>
+      <Route path='/' element={<HomePage/> } />
+      <Route path='/login' element={<LoginPage/> } />
+      <Route path='/signup' element={<SignUpPage/> } />
+     </Routes>
+     <Footer/>
+     </BrowserRouter>
      )
     }
 
