@@ -1,5 +1,8 @@
 import User from '../models/user.model.js'
 import bcryptjs from 'bcryptjs'
+// import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 import { generateTokenAndSetCookie } from '../utils/generateToken.js'
 export async function signup(req, res){ 
     try {
@@ -42,6 +45,14 @@ export async function signup(req, res){
         generateTokenAndSetCookie(newUser._id, res);
 		await newUser.save();
 
+        // const token = jwt.sign({ id: userId }, ENV_VARS.JWT_SECRET, { expiresIn: '7d' });
+        // res.cookie('jwt-netflix-token', token, {
+        //      maxAge: 7 * 24 * 60 * 60 * 1000,
+        //      httpOnly: true, // prevents XSS attacks cross-site scripting attacks, make it not accesed by js, only accesed by browser
+        //      sameSite: "strict", // prevents CSRF attacks cross-site request forgery attacks
+        //     secure: process.env.NODE_ENV  , //
+        //     });
+
 		res.status(201).json({
 			success: true,
 			user: {
@@ -61,29 +72,37 @@ export async function login(req, res){
         const {email, password} = req.body
 
          if(!email || !password){
-             res.status(400).json({success:false, message:"All fields ar required"})
+           return  res.status(400).json({success:false, message:"All fields ar required"})
          }
 
          const user = await User.findOne({email:email})
          if (!user){
-            res.status(400).json({success:false, message:"Invalid Email or Password"})
+          return  res.status(400).json({success:false, message:"Invalid Email or Password"})
          }
 
          const isPasswordCorrect= await bcryptjs.compare(password, user.password)
          if(!isPasswordCorrect){
-            res.status(400).json({success:false, message:"Password is incorrect"})
+          return  res.status(400).json({success:false, message:"Password is incorrect"})
          }
 
          generateTokenAndSetCookie(user._id,res)
 
-         res.status(200).json({success:true, 
+        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        // res.cookie('jwt-netflix-token', token, {
+        //      maxAge: 7 * 24 * 60 * 60 * 1000,
+        //      httpOnly: true, // prevents XSS attacks cross-site scripting attacks, make it not accesed by js, only accesed by browser
+        //      sameSite: "strict", // prevents CSRF attacks cross-site request forgery attacks
+        //     secure: process.env.NODE_ENV  , //
+        //     });
+
+         return res.status(200).json({success:true, 
             user:{
                    ...user._doc,
                    password:""
          } ,message: "logged in successfully"})
     } catch (error) {
         console.log("Error in login controller: " + error.message)
-        res.status(500).json({success:false, message: error.message});
+       return res.status(500).json({success:false, message: error.message});
     }
 }
 export async function logout(req, res){
@@ -94,4 +113,14 @@ export async function logout(req, res){
         console.log("Error in logout controller",error.message)
         res.status(500).json({success:false,message:"Internal Server Error"});
     }
+}
+
+export async function authCheck(req, res) {
+	try {
+		console.log("req.user:", req.user);
+		res.status(200).json({ success: true, user: req.user });
+	} catch (error) {
+		console.log("Error in authCheck controller", error.message);
+		res.status(500).json({ success: false, message: "Internal server error" });
+	}
 }

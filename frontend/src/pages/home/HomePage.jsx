@@ -1,10 +1,11 @@
-import AuthScreen from "./AuthScreen"
-import HomeScreen from "./HomeScreen"
+import AuthScreen from "./AuthScreen";
+import HomeScreen from "./HomeScreen";
+ 
 
  
 
 const HomePage = () => {
-   const user= false
+   const user= true;
 
   return (
     <div className="hero-bg h-screen">

@@ -9,5 +9,6 @@ export const generateTokenAndSetCookie = (userId, res) => {
          sameSite: "strict", // prevents CSRF attacks cross-site request forgery attacks
         secure: ENV_VARS.NODE_ENV !== "development", //
         });
+        console.log('jwt-netflix-token', token)
     return token;
  }
